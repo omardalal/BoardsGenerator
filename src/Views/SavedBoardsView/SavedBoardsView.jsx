@@ -83,7 +83,7 @@ const SavedBoardsView = () => {
   return (
     <div style={styles.savesBox} className={"defaultBoxShadowBlack"}>
       {isLoading && <Loading />}
-      <h1 style={styles.title}>Saved Boards</h1>
+      <h3 style={styles.title}>Saved Boards</h3>
       <div style={styles.savesTable}>
         {!isLoading && loggedUser?.isSignedIn ? (
           savedBoards?.length > 0 ? (
