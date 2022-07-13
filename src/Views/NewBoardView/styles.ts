@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { blue60 } from "@carbon/colors";
+import { red60 } from "@carbon/colors";
 
 export const styles = {
   inputBox: {
@@ -53,4 +53,9 @@ export const styles = {
       cursor: "pointer",
       opacity: opacity,
     } as CSSProperties),
+  errorLbl: {
+    color: red60,
+    fontWeight: 400,
+    marginBottom: 10,
+  } as CSSProperties,
 };

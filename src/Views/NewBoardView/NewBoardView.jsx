@@ -22,6 +22,7 @@ const NewBoardView = () => {
   const [inBoardView, setInBoardView] = useState(false);
   const [eraseBtnOpacity, setEraseBtnOpacity] = useState(1);
   const [showError, setShowError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     setShowError(false);
@@ -56,16 +57,28 @@ const NewBoardView = () => {
       return;
     }
 
-    const generatedBoards = [];
+    let generatedBoards = [];
     for (let i = 0; i < formData.resultsCount; i++) {
-      generatedBoards.push(
-        generateShapes(
-          parseInt(formData.boardWidth),
-          parseInt(formData.boardHeight),
-          formData.shapes
-        )
+      const board = generateShapes(
+        parseInt(formData.boardWidth),
+        parseInt(formData.boardHeight),
+        formData.shapes
       );
+      if (board.length < 1) {
+        generatedBoards = [];
+        break;
+      }
+      generatedBoards.push(board);
     }
+
+    if (generatedBoards.length < 1) {
+      setErrorMsg(
+        "Failed to generate board, please make sure that the dimensions you entered make sense."
+      );
+      return;
+    }
+
+    setErrorMsg("");
 
     setFormData({
       ...formData,
@@ -163,6 +176,7 @@ const NewBoardView = () => {
   return (
     <div style={styles.inputBox} className={"defaultBoxShadowBlack"}>
       <div style={styles.formContainer}>
+        <h5 style={styles.errorLbl}>{errorMsg}</h5>
         <div style={styles.titleRow}>
           <h3 style={styles.formTitle}>New Board</h3>
           <Erase
@@ -170,6 +184,7 @@ const NewBoardView = () => {
             onClick={() => {
               setShowError(false);
               setFormData(initialFormData);
+              setErrorMsg("");
             }}
             onMouseEnter={() => setEraseBtnOpacity(0.75)}
             onMouseLeave={() => setEraseBtnOpacity(1)}

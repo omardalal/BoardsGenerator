@@ -1,9 +1,16 @@
+const MAX_TRIES = 1000;
+
 /**
  * shapes: [{name, width, height}]
  */
 export const generateShapes = (boardWidth, boardHeight, shapes) => {
   const shapesList = [];
+
+  let success = true;
   const shapesArray = shapes.map((shape) => {
+    if (!success) {
+      return {};
+    }
     let left = 0;
     let top = 0;
 
@@ -12,6 +19,7 @@ export const generateShapes = (boardWidth, boardHeight, shapes) => {
 
     //Check if drawn shape overlaps with a previously drawn one. If true, try again (max tries: 100)
     let overlaps = false;
+    let tries = 0;
     do {
       overlaps = false;
 
@@ -31,7 +39,12 @@ export const generateShapes = (boardWidth, boardHeight, shapes) => {
           break;
         }
       }
-    } while (overlaps);
+      tries++;
+    } while (overlaps && tries < MAX_TRIES);
+
+    if (tries >= MAX_TRIES) {
+      success = false;
+    }
 
     shapesList.push({
       ...shape,
@@ -49,6 +62,11 @@ export const generateShapes = (boardWidth, boardHeight, shapes) => {
       bottom: top + shapeHeight,
     };
   });
+
+  if (!success) {
+    return [];
+  }
+
   return shapesArray;
 };
 
