@@ -60,8 +60,8 @@ const NewBoardView = () => {
     for (let i = 0; i < formData.resultsCount; i++) {
       generatedBoards.push(
         generateShapes(
-          formData.boardWidth,
-          formData.boardHeight,
+          parseInt(formData.boardWidth),
+          parseInt(formData.boardHeight),
           formData.shapes
         )
       );

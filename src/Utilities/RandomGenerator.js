@@ -7,21 +7,24 @@ export const generateShapes = (boardWidth, boardHeight, shapes) => {
     let left = 0;
     let top = 0;
 
+    const shapeWidth = parseInt(shape.width);
+    const shapeHeight = parseInt(shape.height);
+
     //Check if drawn shape overlaps with a previously drawn one. If true, try again (max tries: 100)
     let overlaps = false;
     do {
       overlaps = false;
 
-      left = Math.random() * (boardWidth - shape.width);
-      top = Math.random() * (boardHeight - shape.height);
+      left = Math.random() * (boardWidth - shapeWidth);
+      top = Math.random() * (boardHeight - shapeHeight);
 
       for (let i = 0; i < shapesList.length; i++) {
         if (
           elementsOverlap(shapesList[i], {
-            top,
-            left,
-            right: left + shape.width,
-            bottom: top + shape.height,
+            top: top,
+            left: left,
+            right: left + shapeWidth,
+            bottom: top + shapeHeight,
           })
         ) {
           overlaps = true;
@@ -32,18 +35,18 @@ export const generateShapes = (boardWidth, boardHeight, shapes) => {
 
     shapesList.push({
       ...shape,
-      top,
-      left,
-      right: left + shape.width,
-      bottom: top + shape.height,
+      top: top,
+      left: left,
+      right: left + shapeWidth,
+      bottom: top + shapeHeight,
     });
 
     return {
       ...shape,
-      top,
-      left,
-      right: boardWidth - (left + shape.width),
-      bottom: boardHeight - (top + shape.height),
+      top: top,
+      left: left,
+      right: left + shapeWidth,
+      bottom: top + shapeHeight,
     };
   });
   return shapesArray;

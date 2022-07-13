@@ -17,6 +17,9 @@ const SavedBoardsView = () => {
   const loggedUser = useAuth();
 
   useEffect(() => {
+    if (!loggedUser?.pending && !loggedUser.isSignedIn) {
+      setIsLoading(false);
+    }
     if (!loggedUser?.user?.email) {
       return;
     }
@@ -40,8 +43,8 @@ const SavedBoardsView = () => {
         onMouseLeave={() => setHoveredRow(-1)}
         onClick={async () => {
           try {
+            setIsLoading(true);
             const board = await getBoardById(save.boardId);
-            console.log(board);
             setBoardData({
               ...save,
               boardWidth: board.boardWidth,
@@ -53,6 +56,8 @@ const SavedBoardsView = () => {
             setInBoardView(true);
           } catch (error) {
             console.error("Failed to get board data, Error: " + error);
+          } finally {
+            setIsLoading(false);
           }
         }}
       >
