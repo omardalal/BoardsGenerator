@@ -40,7 +40,10 @@ const LoginView = (props) => {
         if (err.code === AuthErrorCodes.INVALID_EMAIL) {
           setIsSuccess(false);
           setErrorMsg("No user exists with this email!");
+          return;
         }
+        setIsSuccess(false);
+        setErrorMsg("Failed to send reset email!");
       } finally {
         setIsLoading(false);
       }
@@ -55,13 +58,17 @@ const LoginView = (props) => {
         console.error("Failed to login, Error: " + err);
         if (err.code === AuthErrorCodes.INVALID_EMAIL) {
           setIsSuccess(false);
-          setErrorMsg("No user exists with this email!");
+          setErrorMsg("Invalid email!");
           return;
         }
         if (err.code === AuthErrorCodes.INVALID_PASSWORD) {
           setIsSuccess(false);
           setErrorMsg("Wrong password!");
+          return;
         }
+        setIsSuccess(false);
+        setErrorMsg("Failed to login!");
+        return;
       } finally {
         setIsLoading(false);
       }
@@ -72,7 +79,7 @@ const LoginView = (props) => {
       await createUser(formData.email, formData.password);
     } catch (err) {
       setIsSuccess(false);
-      setErrorMsg("Something went wrong!");
+      setErrorMsg("Failed to sign up!");
       console.error("Failed to sign up, Error: " + err);
     } finally {
       setIsLoading(false);
