@@ -144,7 +144,7 @@ const LoginView = (props) => {
               setErrorMsg("");
             }}
           >
-            {inForgotPassView ? "back" : "Forgot your password?"}
+            {inForgotPassView ? "Back" : "Forgot your password?"}
           </p>
         )}
       </div>
