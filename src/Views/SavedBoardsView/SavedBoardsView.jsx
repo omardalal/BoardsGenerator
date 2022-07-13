@@ -76,6 +76,7 @@ const SavedBoardsView = () => {
       <BoardView
         backOnPress={() => setInBoardView(false)}
         boardData={boardData}
+        saved
       />
     );
   }

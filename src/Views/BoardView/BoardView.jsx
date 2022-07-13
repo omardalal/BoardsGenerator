@@ -8,11 +8,13 @@ import { saveBoardToCloud } from "../../Utilities/StorageUtils";
 import useAuth from "../../CustomHooks/useAuth";
 
 const BoardView = (props) => {
-  const { boardData, backOnPress } = props;
+  const { boardData, backOnPress, saved } = props;
 
   const [errorMsg, setErrorMsg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedResult, setSelectedResult] = useState(0);
+  const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+
   const loggedUser = useAuth();
 
   const getDropDownArr = () => {
@@ -63,6 +65,7 @@ const BoardView = (props) => {
         <Button
           className={"defaultBoxShadowBlack"}
           style={styles.btn}
+          disabled={saved || savedSuccessfully}
           onClick={async () => {
             if (!loggedUser.isSignedIn) {
               setIsSuccess(false);
@@ -72,6 +75,7 @@ const BoardView = (props) => {
               await saveBoardToCloud(loggedUser?.user?.email, boardData);
               setIsSuccess(true);
               setErrorMsg("Saved successfully!");
+              setSavedSuccessfully(true);
             } catch (error) {
               setIsSuccess(false);
               setErrorMsg("Failed to save board!");
@@ -89,6 +93,7 @@ const BoardView = (props) => {
 BoardView.propTypes = {
   boardData: PropTypes.object,
   backOnPress: PropTypes.func,
+  saved: PropTypes.bool,
 };
 
 export default BoardView;
