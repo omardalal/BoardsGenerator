@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import Board from "../../Components/Board/Board";
 import ShapesList from "../../Components/ShapesList/ShapesList";
-import { Button, Checkbox, Dropdown } from "@carbon/react";
+import { Button, Checkbox, Dropdown, Loading } from "@carbon/react";
 import PropTypes from "prop-types";
 import { saveBoardToCloud } from "../../Utilities/StorageUtils";
 import useAuth from "../../CustomHooks/useAuth";
@@ -16,6 +16,7 @@ const BoardView = (props) => {
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
   const [hoveredShape, setHoveredShape] = useState(-1);
   const [isHoverEnabled, setHoverEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loggedUser = useAuth();
 
@@ -29,6 +30,7 @@ const BoardView = (props) => {
 
   return (
     <div style={styles.mainContainer}>
+      {isLoading && <Loading />}
       <div style={styles.titleRow}>
         <h3>{boardData.boardTitle}</h3>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -86,7 +88,9 @@ const BoardView = (props) => {
             if (!loggedUser.isSignedIn) {
               setIsSuccess(false);
               setErrorMsg("You must be logged in to use this feature!");
+              return;
             }
+            setIsLoading(true);
             try {
               await saveBoardToCloud(loggedUser?.user?.email, boardData);
               setIsSuccess(true);
@@ -96,6 +100,8 @@ const BoardView = (props) => {
               setIsSuccess(false);
               setErrorMsg("Failed to save board!");
               console.error("Failed to store board, Error: " + error);
+            } finally {
+              setIsLoading(false);
             }
           }}
         >
