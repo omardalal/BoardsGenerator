@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import Board from "../../Components/Board/Board";
 import ShapesList from "../../Components/ShapesList/ShapesList";
-import { Button, Dropdown } from "@carbon/react";
+import { Button, Checkbox, Dropdown } from "@carbon/react";
 import PropTypes from "prop-types";
 import { saveBoardToCloud } from "../../Utilities/StorageUtils";
 import useAuth from "../../CustomHooks/useAuth";
@@ -14,6 +14,8 @@ const BoardView = (props) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedResult, setSelectedResult] = useState(0);
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+  const [hoveredShape, setHoveredShape] = useState(-1);
+  const [isHoverEnabled, setHoverEnabled] = useState(true);
 
   const loggedUser = useAuth();
 
@@ -44,14 +46,28 @@ const BoardView = (props) => {
         </div>
         <p>{boardData.date}</p>
       </div>
+      <Checkbox
+        defaultChecked
+        labelText={"Hover Enabled"}
+        id="checkbox-label-1"
+        onChange={(_, { checked }) => setHoverEnabled(checked)}
+      />
       <h5 style={styles.errorLbl(isSuccess)}>{errorMsg}</h5>
       <div style={styles.boardRow}>
         <Board
           width={parseInt(boardData?.boardWidth)}
           height={parseInt(boardData?.boardHeight)}
           shapes={boardData?.generatedBoards[selectedResult]}
+          hoveredShape={hoveredShape}
+          setHoveredShape={setHoveredShape}
+          isHoverEnabled={isHoverEnabled}
         />
-        <ShapesList list={boardData?.generatedBoards[selectedResult]} />
+        <ShapesList
+          list={boardData?.generatedBoards[selectedResult]}
+          hoveredShape={hoveredShape}
+          setHoveredShape={setHoveredShape}
+          isHoverEnabled={isHoverEnabled}
+        />
       </div>
       <div style={styles.btnsContainer}>
         <Button

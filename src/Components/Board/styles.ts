@@ -1,4 +1,4 @@
-import { gray20, gray30 } from "@carbon/colors";
+import { gray20, gray30, cyan20 } from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
@@ -18,22 +18,21 @@ export const styles = {
     height: number,
     top: number,
     left: number,
-    bottom,
-    right
+    hovered: boolean
   ) =>
     ({
       height: height,
       width: width,
-      backgroundColor: gray20,
+      backgroundColor: hovered ? cyan20 : gray20,
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       position: "absolute",
       border: `2px solid ${gray30}`,
       fontSize: 12,
-      top,
-      left,
-      bottom,
-      right,
+      ...(hovered && { transform: "scale(1.25)", zIndex: 100 }),
+      transition: "0.1s",
+      top: top,
+      left: left,
     } as CSSProperties),
 };

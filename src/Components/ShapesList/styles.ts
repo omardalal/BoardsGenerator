@@ -1,3 +1,4 @@
+import { cyan50 } from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
@@ -8,18 +9,20 @@ export const styles = {
     width: 350,
     overflow: "auto",
     maxHeight: 760,
+    cursor: "default",
   } as CSSProperties,
   listHeader: {
     textAlign: "center",
     padding: "10px 5px",
   } as CSSProperties,
-  listItem: {
-    padding: "10px 15px",
-    backgroundColor: "#898AA6",
-    color: "white",
-    marginBottom: 1,
-    display: "flex",
-    justifyContent: "space-between",
-  } as CSSProperties,
+  listItem: (hovered: boolean) =>
+    ({
+      padding: "10px 15px",
+      backgroundColor: hovered ? cyan50 : "#898AA6",
+      color: "white",
+      marginBottom: 1,
+      display: "flex",
+      justifyContent: "space-between",
+    } as CSSProperties),
   listItemInfo: { display: "flex", flexDirection: "column" } as CSSProperties,
 };
