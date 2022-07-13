@@ -23,6 +23,7 @@ export const styles = {
       marginBottom: 1,
       display: "flex",
       justifyContent: "space-between",
+      transition: "0.3s",
     } as CSSProperties),
   listItemInfo: { display: "flex", flexDirection: "column" } as CSSProperties,
 };
