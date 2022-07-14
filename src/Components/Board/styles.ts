@@ -31,7 +31,7 @@ export const styles = {
       border: `2px solid ${gray30}`,
       fontSize: 12,
       ...(hovered && { transform: "scale(1.25)", zIndex: 100 }),
-      transition: "0.1s",
+      transition: "0.3s",
       top: top,
       left: left,
     } as CSSProperties),

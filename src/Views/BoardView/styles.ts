@@ -3,7 +3,8 @@ import { CSSProperties } from "react";
 
 export const styles = {
   mainContainer: {
-    margin: "100px auto",
+    margin: "75px auto",
+    padding: "0 20px",
   } as CSSProperties,
   titleRow: {
     display: "flex",

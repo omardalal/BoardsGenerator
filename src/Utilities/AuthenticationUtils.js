@@ -11,13 +11,17 @@ export const createUser = async (email, password) => {
   if (!email || !password) return;
   return await createUserWithEmailAndPassword(
     getFirebaseAuth(),
-    email?.toLowerCase(),
+    email?.toLowerCase()?.trim(),
     password
   );
 };
 
 export const signInUser = async (email, password) => {
-  return await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
+  return await signInWithEmailAndPassword(
+    getFirebaseAuth(),
+    email?.toLowerCase()?.trim(),
+    password
+  );
 };
 
 export const signOutUser = async () => {
@@ -25,11 +29,17 @@ export const signOutUser = async () => {
 };
 
 export const addUserToFirestore = async (email) => {
-  return await setDoc(doc(getFirebaseDb(), "User", email?.toLowerCase()), {
-    savedBoards: [],
-  });
+  return await setDoc(
+    doc(getFirebaseDb(), "User", email?.toLowerCase()?.trim()),
+    {
+      savedBoards: [],
+    }
+  );
 };
 
 export const sendResetEmail = async (email) => {
-  return await sendPasswordResetEmail(getFirebaseAuth(), email);
+  return await sendPasswordResetEmail(
+    getFirebaseAuth(),
+    email?.toLowerCase()?.trim()
+  );
 };
