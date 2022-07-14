@@ -1,9 +1,22 @@
-const MAX_TRIES = 1000;
+const MAX_TRIES = 10000;
+const MAX_RETRIES = 10;
 
 /**
  * shapes: [{name, width, height}]
  */
 export const generateShapes = (boardWidth, boardHeight, shapes) => {
+  let retries = 0;
+  let boards = generateBoard(boardWidth, boardHeight, shapes);
+
+  while (boards?.length < 1 && retries < MAX_RETRIES) {
+    boards = generateBoard(boardWidth, boardHeight, shapes);
+    retries++;
+  }
+
+  return boards;
+};
+
+const generateBoard = (boardWidth, boardHeight, shapes) => {
   const shapesList = [];
 
   let success = true;

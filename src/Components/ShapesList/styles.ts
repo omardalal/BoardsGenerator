@@ -14,6 +14,7 @@ export const styles = {
   listHeader: {
     textAlign: "center",
     padding: "10px 5px",
+    fontWeight: 600,
   } as CSSProperties,
   listItem: (hovered: boolean) =>
     ({

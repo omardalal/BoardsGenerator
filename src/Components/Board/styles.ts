@@ -35,4 +35,21 @@ export const styles = {
       top: top,
       left: left,
     } as CSSProperties),
+  tooltip: (visible: boolean) =>
+    ({
+      display: visible ? "flex" : "none",
+      flexDirection: "column",
+      position: "absolute",
+      justifyContent: "center",
+      alignItems: "center",
+      width: 150,
+      height: 35,
+      top: -40,
+      backgroundColor: "rgba(0 0 0 / 0.75)",
+      borderRadius: 10,
+    } as CSSProperties),
+  tooltipText: {
+    fontSize: 10,
+    color: "white",
+  } as CSSProperties,
 };
