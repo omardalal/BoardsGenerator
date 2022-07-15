@@ -43,17 +43,19 @@ const Board = (props) => {
                 hoveredShape === index && isHoverEnabled
               )}
             >
-              <div
-                style={styles.tooltip(
-                  visibleTooltip === index && isHoverEnabled
-                )}
-              >
-                <p style={styles.tooltipText}>{`Top: ${round(
-                  shape.top
-                )} / Left: ${round(shape.left)}`}</p>
-                <p style={styles.tooltipText}>{`Width: ${round(
-                  shape.width
-                )} / Height: ${round(shape.height)}`}</p>
+              <div style={styles.tooltipContainer}>
+                <div
+                  style={styles.tooltip(
+                    visibleTooltip === index && isHoverEnabled
+                  )}
+                >
+                  <p style={styles.tooltipText}>{`Top: ${round(
+                    shape.top
+                  )} / Left: ${round(shape.left)}`}</p>
+                  <p style={styles.tooltipText}>{`Width: ${round(
+                    shape.width
+                  )} / Height: ${round(shape.height)}`}</p>
+                </div>
               </div>
               {shape.name}
             </div>

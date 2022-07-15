@@ -39,15 +39,19 @@ export const styles = {
     ({
       display: visible ? "flex" : "none",
       flexDirection: "column",
-      position: "absolute",
       justifyContent: "center",
       alignItems: "center",
       width: 150,
       height: 35,
-      top: -40,
+      top: -35,
       backgroundColor: "rgba(0 0 0 / 0.75)",
       borderRadius: 10,
     } as CSSProperties),
+  tooltipContainer: {
+    position: "absolute",
+    top: -40,
+    paddingBottom: 5,
+  } as CSSProperties,
   tooltipText: {
     fontSize: 10,
     color: "white",
