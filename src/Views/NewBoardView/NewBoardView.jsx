@@ -41,6 +41,14 @@ const NewBoardView = () => {
           height: 1,
         });
       }
+      return;
+    }
+
+    if (formData?.shapesCount < formData?.shapes?.length) {
+      for (let i = formData?.shapes?.length; i > formData?.shapesCount; i--) {
+        formData?.shapes?.pop();
+      }
+      return;
     }
   }, [formData.shapes, formData.shapesCount]);
 
