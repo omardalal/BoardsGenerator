@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
+import { round } from "../../Utilities/RandomGenerator";
 
 /**
  * shapes: [{ name: string, width: number, height: number, top: number, left: number }]
@@ -16,10 +17,6 @@ const Board = (props) => {
   } = props;
 
   const [visibleTooltip, setVisibleTooltip] = useState(-1);
-
-  const round = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
-  };
 
   return (
     <div style={styles.shapesBoxContainer}>

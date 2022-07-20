@@ -91,3 +91,7 @@ const elementsOverlap = (el1, el2) => {
     el1.left > el2.right
   );
 };
+
+export const round = (num) => {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};

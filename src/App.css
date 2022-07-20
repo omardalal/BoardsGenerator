@@ -1,3 +1,4 @@
+@import url("https://cdn.syncfusion.com/ej2/bootstrap5.css");
 .AppContainer {
   background-color: #f4f4f4;
   width: 100%;
@@ -26,4 +27,12 @@ a {
 #root {
   min-height: 100vh;
   height: 100%;
+}
+
+#js-licensing {
+  display: none;
+}
+
+div[style='position:fixed;top:0;left:0;right:0;font-family:"Segoe UI";font-size:16px;background:repeating-linear-gradient(45deg,#d70f0f,#d70f0f 10px,#e12121 10px,#e12121 17px);color:#ffffff;z-index:999999999;text-align:center;padding:10px 50px 10px 25px;'] {
+  display: none;
 }

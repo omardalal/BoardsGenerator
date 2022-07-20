@@ -1,16 +1,13 @@
 import React from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
+import { round } from "../../Utilities/RandomGenerator";
 
 /**
  * list: [{ name: string, top: number, left: number }]
  */
 const ShapesList = (props) => {
   const { list, setHoveredShape, hoveredShape, isHoverEnabled } = props;
-
-  const round = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
-  };
 
   const getRow = (shape, index) => (
     <div
