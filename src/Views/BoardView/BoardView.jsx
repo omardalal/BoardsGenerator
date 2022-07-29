@@ -73,6 +73,7 @@ const BoardView = (props) => {
                       <CellDirective value={"Left"} />
                       <CellDirective value={"Width"} />
                       <CellDirective value={"Height"} />
+                      <CellDirective value={"Power Density"} />
                     </CellsDirective>
                   </RowDirective>
                   {boardData?.generatedBoards[selectedResult]?.map((shape) => (
@@ -83,6 +84,9 @@ const BoardView = (props) => {
                         <CellDirective value={round(shape.left)} />
                         <CellDirective value={round(shape.width)} />
                         <CellDirective value={round(shape.height)} />
+                        <CellDirective
+                          value={round(shape?.powerDensity ?? "")}
+                        />
                       </CellsDirective>
                     </RowDirective>
                   ))}

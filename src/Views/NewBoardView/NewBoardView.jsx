@@ -36,9 +36,10 @@ const NewBoardView = () => {
           : MAX_SHAPES;
       for (let i = formData?.shapes?.length; i < limit; i++) {
         formData?.shapes?.push({
-          name: `shape ${i + 1}`,
+          name: `Die ${i + 1}`,
           width: 1,
           height: 1,
+          powerDensity: 0,
         });
       }
       return;
@@ -105,10 +106,10 @@ const NewBoardView = () => {
         <div style={styles.fieldsRow}>
           <TextInput
             invalid={showError && !formData.shapes[i]?.name}
-            value={formData.shapes[i]?.name ?? `shape ${i + 1}`}
+            value={formData.shapes[i]?.name ?? `Die ${i + 1}`}
             invalidText={"This field is required!"}
             data-modal-primary-focus
-            labelText={"Shape name"}
+            labelText={"Die name"}
             placeholder={"Name"}
             onChange={(evt) => {
               const newShapes = formData.shapes;
@@ -128,10 +129,10 @@ const NewBoardView = () => {
               invalid={showError && !formData.shapes[i]?.width}
               invalidText={
                 formData?.shapes[i]?.width > formData?.boardWidth
-                  ? "Shape width should be less than board width"
+                  ? "Die width should be less than package width"
                   : "This field is required!"
               }
-              label={"Shape width"}
+              label={"Die width"}
               placeholder={"Width"}
               value={formData.shapes[i]?.width ?? 1}
               onChange={(evt) => {
@@ -152,15 +153,37 @@ const NewBoardView = () => {
               invalid={showError && !formData.shapes[i]?.height}
               invalidText={
                 formData?.shapes[i]?.height > formData?.boardHeight
-                  ? "Shape height should be less than board height"
+                  ? "Die height should be less than package height"
                   : "This field is required!"
               }
-              label={"Shape height"}
+              label={"Die height"}
               placeholder={"Height"}
               value={formData.shapes[i]?.height ?? 1}
               onChange={(evt) => {
                 const newShapes = formData.shapes;
                 newShapes[i] = { ...newShapes[i], height: evt.target?.value };
+                setFormData({ ...formData, shapes: newShapes });
+              }}
+              light
+            />
+          </div>
+          <div style={styles.sepH} />
+          <div style={styles.numberInputContainer}>
+            <NumberInput
+              style={styles.numberInput}
+              hideSteppers
+              data-modal-primary-focus
+              invalid={showError && !formData.shapes[i]?.powerDensity}
+              invalidText={"This field is required!"}
+              label={"Power Density"}
+              placeholder={"Power"}
+              value={formData.shapes[i]?.powerDensity ?? 1}
+              onChange={(evt) => {
+                const newShapes = formData.shapes;
+                newShapes[i] = {
+                  ...newShapes[i],
+                  powerDensity: evt.target?.value,
+                };
                 setFormData({ ...formData, shapes: newShapes });
               }}
               light
@@ -186,7 +209,7 @@ const NewBoardView = () => {
       <div style={styles.formContainer}>
         <h5 style={styles.errorLbl}>{errorMsg}</h5>
         <div style={styles.titleRow}>
-          <h3 style={styles.formTitle}>New Board</h3>
+          <h3 style={styles.formTitle}>New Package</h3>
           <Erase
             style={styles.eraseIcon(eraseBtnOpacity)}
             onClick={() => {
@@ -198,14 +221,14 @@ const NewBoardView = () => {
             onMouseLeave={() => setEraseBtnOpacity(1)}
           />
         </div>
-        <h5 style={styles.sectionTitle}>Board Information</h5>
+        <h5 style={styles.sectionTitle}>Package Information</h5>
         <div style={styles.fieldsRow}>
           <TextInput
             invalid={showError && !formData?.boardTitle}
             invalidText={"This field is required!"}
             value={formData?.boardTitle ?? ""}
             data-modal-primary-focus
-            labelText={"Board Title"}
+            labelText={"Package Title"}
             placeholder={"Title"}
             onChange={(evt) => {
               setFormData({ ...formData, boardTitle: evt.target?.value });
@@ -227,10 +250,13 @@ const NewBoardView = () => {
                   ? `Please enter a value between 1 and ${MAX_SHAPES}`
                   : "This field is required!"
               }
-              label={"Number of shapes"}
-              placeholder={"Number of shapes"}
+              label={"Number of dies"}
+              placeholder={"Number of dies"}
               value={formData?.shapesCount ?? 1}
               onChange={(evt) => {
+                if (!evt.target?.value) {
+                  return;
+                }
                 setFormData({
                   ...formData,
                   shapesCount: evt.target?.value,
@@ -257,7 +283,7 @@ const NewBoardView = () => {
                   : "This field is required!"
               }
               label={"Results count"}
-              placeholder={"number of generated boards"}
+              placeholder={"number of generated packages"}
               value={formData?.resultsCount ?? 1}
               onChange={(evt) => {
                 setFormData({
@@ -281,7 +307,7 @@ const NewBoardView = () => {
                   ? "Please enter a value larger than 0"
                   : "This field is required!"
               }
-              label={"Board width"}
+              label={"Package width"}
               placeholder={"Width"}
               value={formData?.boardWidth ?? 1}
               onChange={(evt) => {
@@ -307,7 +333,7 @@ const NewBoardView = () => {
                     ? "Please enter a value larger than 0"
                     : "This field is required!"
                 }
-                label={"Board height"}
+                label={"Package height"}
                 placeholder={"Height"}
                 value={formData?.boardHeight ?? 1}
                 onChange={(evt) => {
@@ -321,12 +347,13 @@ const NewBoardView = () => {
             </div>
           </div>
         </div>
-        <h5 style={styles.sectionTitle}>Shapes Information</h5>
+        <h5 style={styles.sectionTitle}>Dies Information</h5>
         <div style={styles.shapeInputsContainer}>{getShapeInputs()}</div>
       </div>
       <Button
         style={styles.genBtn}
         onClick={() => {
+          console.log(formData.shapes);
           validateInputs();
         }}
       >

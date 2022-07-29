@@ -25,7 +25,7 @@ const ShapesList = (props) => {
 
   return (
     <div style={styles.listContainer}>
-      <h4 style={styles.listHeader}>Shapes</h4>
+      <h4 style={styles.listHeader}>Dies</h4>
       <div>{list?.map((shape, index) => getRow(shape, index))}</div>
     </div>
   );

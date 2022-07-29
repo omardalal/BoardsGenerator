@@ -37,9 +37,13 @@ const Sidebar = (props) => {
 
   return (
     <div style={styles.mainContainer}>
-      {getSidebarBtn("New Board", 0, <Add style={styles.btnIconStyle(true)} />)}
       {getSidebarBtn(
-        "Saved Boards",
+        "New Package",
+        0,
+        <Add style={styles.btnIconStyle(true)} />
+      )}
+      {getSidebarBtn(
+        "Saved Packages",
         1,
         <Save style={styles.btnIconStyle(false)} />
       )}

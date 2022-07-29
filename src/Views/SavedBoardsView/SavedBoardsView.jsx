@@ -84,7 +84,7 @@ const SavedBoardsView = () => {
   return (
     <div style={styles.savesBox} className={"defaultBoxShadowBlack"}>
       {isLoading && <Loading />}
-      <h3 style={styles.title}>Saved Boards</h3>
+      <h3 style={styles.title}>Saved Packages</h3>
       <div style={styles.savesTable}>
         {!isLoading && loggedUser?.isSignedIn ? (
           savedBoards?.length > 0 ? (
@@ -100,11 +100,11 @@ const SavedBoardsView = () => {
               )
             )
           ) : (
-            <p style={styles.infoMsg}>You don't have any saved boards.</p>
+            <p style={styles.infoMsg}>You don't have any saved packages.</p>
           )
         ) : (
           <p style={styles.infoMsg}>
-            You must be logged in to access your saved boards.
+            You must be logged in to access your saved packages.
           </p>
         )}
       </div>
