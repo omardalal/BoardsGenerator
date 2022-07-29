@@ -1,6 +1,6 @@
 const MAX_TRIES = 10000;
 const MAX_RETRIES = 10;
-const MIN_EDGE_DISTANCE = 1;
+const MIN_EDGE_DISTANCE = 10; // 1mm - upscaled (10 pixels)
 
 /**
  * shapes: [{name, width, height}]
