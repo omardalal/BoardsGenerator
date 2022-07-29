@@ -1,5 +1,6 @@
 const MAX_TRIES = 10000;
 const MAX_RETRIES = 10;
+const MIN_EDGE_DISTANCE = 1;
 
 /**
  * shapes: [{name, width, height}]
@@ -36,8 +37,14 @@ const generateBoard = (boardWidth, boardHeight, shapes) => {
     do {
       overlaps = false;
 
-      left = Math.random() * (boardWidth - shapeWidth);
-      top = Math.random() * (boardHeight - shapeHeight);
+      left = Math.max(
+        Math.random() * (boardWidth - MIN_EDGE_DISTANCE - shapeWidth),
+        MIN_EDGE_DISTANCE
+      );
+      top = Math.max(
+        Math.random() * (boardHeight - MIN_EDGE_DISTANCE - shapeHeight),
+        MIN_EDGE_DISTANCE
+      );
 
       for (let i = 0; i < shapesList.length; i++) {
         if (
