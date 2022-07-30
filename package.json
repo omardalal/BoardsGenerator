@@ -5,6 +5,7 @@
   "dependencies": {
     "@carbon/colors": "^11.3.0",
     "@carbon/react": "^1.7.0",
+    "@syncfusion/ej2-react-diagrams": "^20.2.40",
     "@syncfusion/ej2-react-spreadsheet": "20.2.39",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^13.5.0",

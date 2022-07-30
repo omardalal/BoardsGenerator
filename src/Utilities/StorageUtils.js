@@ -15,13 +15,57 @@ export const getUserSavedBoards = async (email) => {
   return userData?.savedBoards;
 };
 
-export const saveBoardToCloud = async (email, boardData) => {
+export const updateBoardValues = async (
+  boardId,
+  generatedBoards,
+  drawnConnectors,
+  resultsCount
+) => {
+  let saveConnectors = [];
+  if (!drawnConnectors || drawnConnectors?.length < 1) {
+    for (let i = 0; i < resultsCount; i++) {
+      saveConnectors.push({
+        connector: [],
+      });
+    }
+  } else {
+    saveConnectors = drawnConnectors.map((connector) => ({
+      connector: connector?.length > 0 ? connector : [],
+    }));
+  }
+  await updateDoc(doc(getFirebaseDb(), "Board", boardId), {
+    generatedBoards: generatedBoards.map((board) => ({
+      board: board,
+    })),
+    drawnConnectors: saveConnectors,
+  });
+};
+
+export const saveNewBoardToCloud = async (
+  email,
+  boardData,
+  generatedBoards,
+  drawnConnectors
+) => {
+  let saveConnectors = [];
+  if (!drawnConnectors || drawnConnectors?.length < 1) {
+    for (let i = 0; i < boardData.resultsCount; i++) {
+      saveConnectors.push({
+        connector: [],
+      });
+    }
+  } else {
+    saveConnectors = drawnConnectors.map((connector) => ({
+      connector: connector?.length > 0 ? connector : [],
+    }));
+  }
   const id = await addDoc(collection(getFirebaseDb(), "Board"), {
     boardWidth: parseInt(boardData?.boardWidth),
     boardHeight: parseInt(boardData?.boardHeight),
-    generatedBoards: boardData?.generatedBoards.map((board) => ({
+    generatedBoards: generatedBoards.map((board) => ({
       board: board,
     })),
+    drawnConnectors: saveConnectors,
     email,
   });
 

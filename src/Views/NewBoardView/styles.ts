@@ -39,7 +39,7 @@ export const styles = {
     height: 400,
     overflow: "auto",
   } as CSSProperties,
-  numberInput: { minWidth: 270 } as CSSProperties,
+  numberInput: { minWidth: 180 } as CSSProperties,
   numberInputContainer: { height: 80 } as CSSProperties,
   titleRow: {
     display: "flex",

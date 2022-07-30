@@ -1,4 +1,10 @@
 @import url("https://cdn.syncfusion.com/ej2/bootstrap5.css");
+@import "../node_modules/@syncfusion/ej2-diagrams/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+
 .AppContainer {
   background-color: #f4f4f4;
   width: 100%;
