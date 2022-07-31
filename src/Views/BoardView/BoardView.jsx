@@ -133,9 +133,7 @@ const BoardView = (props) => {
           style={styles.btn}
           onClick={() => {
             setShapesCopy(boardData?.generatedBoards[selectedResult]);
-            setConnectorsCopy(
-              boardData?.drawnConnectors?.[selectedResult] ?? []
-            );
+            setConnectorsCopy(boardData?.drawnConnectors?.[selectedResult]);
             setChangesMade(false);
           }}
           kind={"danger"}

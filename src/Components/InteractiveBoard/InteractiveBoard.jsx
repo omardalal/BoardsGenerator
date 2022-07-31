@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { DiagramComponent, DiagramTools } from "@syncfusion/ej2-react-diagrams";
+import {
+  Connector,
+  Node,
+  DiagramComponent,
+  DiagramTools,
+  Selector,
+} from "@syncfusion/ej2-react-diagrams";
 import { styles } from "./styles.ts";
 import {
   calculateStraightLineLength,
@@ -62,44 +68,117 @@ const InteractiveBoard = ({
 
   const onPositionChange = (val) => {
     if (val.state === "Completed") {
-      const id = val.source?.nodes?.[0]?.id ?? val.source?.id;
-      let nodeIndex = -1;
-      setNodesList(
-        nodesList.map((node, index) => {
-          if (node.id === id) {
-            nodeIndex = index;
+      setChangesMade(true);
+      if (val.source instanceof Connector) {
+        updateConnectorsPos(
+          val.source?.id,
+          val.source?.sourcePoint,
+          val.source?.targetPoint
+        );
+        return;
+      }
+
+      if (val.source instanceof Selector) {
+        if (val.source?.nodes?.length > 0) {
+          updateShapesPos(val.source?.nodes?.[0]?.id, val);
+        }
+        if (val.source?.connectors?.length > 0) {
+          updateConnectorsPos(
+            val.source?.connectors?.[0]?.id,
+            val.source?.connectors?.[0].sourcePoint,
+            val.source?.connectors?.[0].targetPoint
+          );
+        }
+        return;
+      }
+
+      if (val.source instanceof Node) {
+        updateShapesPos(val.source?.id, val);
+        return;
+      }
+    }
+  };
+
+  const updateConnectorsPos = (id, sourcePoint, targetPoint) => {
+    let connectorIndex = -1;
+    setDrawnConnectors(
+      drawnConnectors.map((conn, index) => {
+        if (conn.id === id) {
+          connectorIndex = index;
+          return {
+            ...conn,
+            sourcePoint: {
+              x: sourcePoint.x,
+              y: sourcePoint.y,
+            },
+            targetPoint: {
+              x: targetPoint.x,
+              y: targetPoint.y,
+            },
+          };
+        }
+        return conn;
+      })
+    );
+
+    if (connectorIndex >= 0) {
+      setConnectorsCopy(
+        connectorsCopy?.map((connector, index) => {
+          if (index !== connectorIndex) {
+            return connector;
+          }
+          return {
+            ...connector,
+            sourcePoint: {
+              x: sourcePoint.x,
+              y: sourcePoint.y,
+            },
+            targetPoint: {
+              x: targetPoint.x,
+              y: targetPoint.y,
+            },
+          };
+        })
+      );
+    }
+  };
+
+  const updateShapesPos = (id, val) => {
+    let nodeIndex = -1;
+    setNodesList(
+      nodesList.map((node, index) => {
+        if (node.id === id) {
+          nodeIndex = index;
+          return {
+            ...node,
+            offsetX: val.source?.offsetX,
+            offsetY: val.source?.offsetY,
+          };
+        }
+        return node;
+      })
+    );
+
+    if (nodeIndex >= 0) {
+      setShapesCopy(
+        shapesCopy.map((node, index) => {
+          if (index === nodeIndex) {
             return {
               ...node,
-              offsetX: val.source?.offsetX,
-              offsetY: val.source?.offsetY,
+              left: val.source?.offsetX,
+              top: val.source?.offsetY,
+              bottom: val.source?.offsetY + val.source?.height,
+              right: val.source?.offsetX + val.source?.width,
             };
           }
           return node;
         })
       );
-
-      if (nodeIndex >= 0) {
-        setShapesCopy(
-          shapesCopy.map((node, index) => {
-            if (index === nodeIndex) {
-              return {
-                ...node,
-                left: val.source?.offsetX,
-                top: val.source?.offsetY,
-                bottom: val.source?.offsetY + val.source?.height,
-                right: val.source?.offsetX + val.source?.width,
-              };
-            }
-            return node;
-          })
-        );
-        setChangesMade(true);
-      }
     }
   };
 
   const updateConnectorsAnnotations = (connectors) => {
-    if (!connectors || !connectors.length > 0) {
+    if (!connectors) {
       return;
     }
     setDrawnConnectors(
@@ -130,7 +209,6 @@ const InteractiveBoard = ({
     if (
       !(
         !val.element.connectors ||
-        val.element.connectors?.length < 1 ||
         val.element.connectors?.length === drawnConnectors?.length
       )
     ) {
@@ -219,6 +297,17 @@ const InteractiveBoard = ({
     </div>
   );
 
+  const onConnectorPointChange = (val) => {
+    if (val.state === "Completed") {
+      setChangesMade(true);
+      updateConnectorsPos(
+        val.connector?.id,
+        val.connector?.sourcePoint,
+        val.connector?.targetPoint
+      );
+    }
+  };
+
   return (
     <div style={{ margin: "auto", display: "flex" }}>
       {getSideBtns()}
@@ -235,16 +324,12 @@ const InteractiveBoard = ({
             borderColor: showDangerZone ? "rgba(255 0 0 / 0.5)" : "transparent",
           }))}
           connectors={drawnConnectors}
-          pageSettings={pageSettings}
+          pageSettings={(() => pageSettings(width, height))()}
           scrollSettings={scrollSettings}
-          sourcePointChange={(val) =>
-            calculateStraightLineLength(val.connector)
-          }
-          targetPointChange={(val) =>
-            calculateStraightLineLength(val.connector)
-          }
+          sourcePointChange={onConnectorPointChange}
+          targetPointChange={onConnectorPointChange}
           drawingObject={selectedDrawConnector}
-          tool={inDrawMode ? DiagramTools.ContinuousDraw : DiagramTools.None}
+          tool={inDrawMode ? DiagramTools.ContinuousDraw : DiagramTools.Default}
           positionChange={onPositionChange}
           propertyChange={onPropertyChange}
         />

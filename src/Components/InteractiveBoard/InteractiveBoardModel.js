@@ -100,13 +100,12 @@ export const parseConnectorsList = (connectors) => {
   });
 };
 
-export const pageSettings = {
-  width: 750,
-  height: 750,
+export const pageSettings = (w, h) => ({
+  width: w,
+  height: h,
   boundaryConstraints: "Page",
   multiplePage: false,
-  constraints: ConnectorConstraints.Default | ConnectorConstraints.Interaction,
-};
+});
 
 export const scrollSettings = {
   minZoom: 1,
@@ -118,7 +117,7 @@ export const straightConnector = {
   type: "Straight",
   segments: [
     {
-      type: "polyline",
+      type: "Straight",
     },
   ],
   style: {
@@ -133,6 +132,7 @@ export const straightConnector = {
     },
     shape: "None",
   },
+  constraints: ConnectorConstraints.Default,
 };
 
 export const orthogonalConnector = {
