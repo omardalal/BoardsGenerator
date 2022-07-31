@@ -94,7 +94,7 @@ const BoardView = (props) => {
                       <CellDirective value={"Power Density"} />
                     </CellsDirective>
                   </RowDirective>
-                  {boardData?.generatedBoards[selectedResult]?.map((shape) => (
+                  {shapesCopy?.map((shape) => (
                     <RowDirective>
                       <CellsDirective>
                         <CellDirective value={shape.name} />
