@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styles } from "./styles.ts";
 import Board from "../../Components/Board/Board";
 import ShapesList from "../../Components/ShapesList/ShapesList";
 import { Button, Checkbox, Dropdown, Loading } from "@carbon/react";
 import PropTypes from "prop-types";
-import { saveBoardToCloud } from "../../Utilities/StorageUtils";
+import {
+  saveNewBoardToCloud,
+  updateBoardValues,
+} from "../../Utilities/StorageUtils";
 import useAuth from "../../CustomHooks/useAuth";
 import {
   CellDirective,
@@ -16,6 +19,7 @@ import {
   SpreadsheetComponent,
 } from "@syncfusion/ej2-react-spreadsheet";
 import { round } from "../../Utilities/RandomGenerator";
+import InteractiveBoard from "../../Components/InteractiveBoard/InteractiveBoard";
 
 const BoardView = (props) => {
   const { boardData, backOnPress, saved } = props;
@@ -28,8 +32,22 @@ const BoardView = (props) => {
   const [isHoverEnabled, setHoverEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpreadsheetView, setIsSpreadsheetView] = useState(false);
+  const [inInteractiveView, setInInteractiveView] = useState(false);
+  const [shapesCopy, setShapesCopy] = useState(
+    boardData?.generatedBoards[selectedResult]
+  );
+  const [connectorsCopy, setConnectorsCopy] = useState(
+    boardData?.drawnConnectors?.[selectedResult] ?? []
+  );
+  const [changesMade, setChangesMade] = useState(false);
 
   const loggedUser = useAuth();
+
+  useEffect(() => {
+    setShapesCopy(boardData?.generatedBoards[selectedResult]);
+    setConnectorsCopy(boardData?.drawnConnectors?.[selectedResult] ?? []);
+    setChangesMade(false);
+  }, [boardData?.generatedBoards, boardData?.drawnConnectors, selectedResult]);
 
   const getDropDownArr = () => {
     const arr = [];
@@ -76,7 +94,7 @@ const BoardView = (props) => {
                       <CellDirective value={"Power Density"} />
                     </CellsDirective>
                   </RowDirective>
-                  {boardData?.generatedBoards[selectedResult]?.map((shape) => (
+                  {shapesCopy?.map((shape) => (
                     <RowDirective>
                       <CellsDirective>
                         <CellDirective value={shape.name} />
@@ -102,6 +120,28 @@ const BoardView = (props) => {
   return (
     <div style={styles.mainContainer}>
       {isLoading && <Loading />}
+      <div style={{ ...styles.btnsContainer, marginBottom: 15 }}>
+        <Button
+          className={"defaultBoxShadowBlack"}
+          style={styles.btn}
+          onClick={() => backOnPress?.()}
+        >
+          Back
+        </Button>
+        <Button
+          className={"defaultBoxShadowBlack"}
+          style={styles.btn}
+          onClick={() => {
+            setShapesCopy(boardData?.generatedBoards[selectedResult]);
+            setConnectorsCopy(boardData?.drawnConnectors?.[selectedResult]);
+            setChangesMade(false);
+          }}
+          kind={"danger"}
+          disabled={!changesMade}
+        >
+          Discard Changes
+        </Button>
+      </div>
       <div style={styles.titleRow}>
         <h3>{boardData.boardTitle}</h3>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -119,37 +159,53 @@ const BoardView = (props) => {
         </div>
         <p>{boardData.date}</p>
       </div>
-      <Checkbox
-        defaultChecked
-        labelText={"Hover Enabled"}
-        id="checkbox-label-1"
-        onChange={(_, { checked }) => setHoverEnabled(checked)}
-      />
+      {!inInteractiveView && (
+        <Checkbox
+          defaultChecked
+          labelText={"Hover Enabled"}
+          id="checkbox-label-1"
+          onChange={(_, { checked }) => setHoverEnabled(checked)}
+        />
+      )}
       <h5 style={styles.errorLbl(isSuccess)}>{errorMsg}</h5>
       <div style={styles.boardRow}>
-        <Board
-          width={parseInt(boardData?.boardWidth)}
-          height={parseInt(boardData?.boardHeight)}
-          shapes={boardData?.generatedBoards[selectedResult]}
-          hoveredShape={hoveredShape}
-          setHoveredShape={setHoveredShape}
-          isHoverEnabled={isHoverEnabled}
-        />
+        {!inInteractiveView ? (
+          <Board
+            width={parseInt(boardData?.boardWidth)}
+            height={parseInt(boardData?.boardHeight)}
+            shapes={shapesCopy}
+            hoveredShape={hoveredShape}
+            setHoveredShape={setHoveredShape}
+            isHoverEnabled={isHoverEnabled}
+          />
+        ) : (
+          <InteractiveBoard
+            shapesCopy={shapesCopy}
+            setShapesCopy={setShapesCopy}
+            setChangesMade={setChangesMade}
+            connectorsCopy={connectorsCopy}
+            setConnectorsCopy={setConnectorsCopy}
+            width={parseInt(boardData?.boardWidth)}
+            height={parseInt(boardData?.boardHeight)}
+          />
+        )}
         <ShapesList
-          list={boardData?.generatedBoards[selectedResult]}
+          list={shapesCopy}
           hoveredShape={hoveredShape}
           setHoveredShape={setHoveredShape}
           isHoverEnabled={isHoverEnabled}
         />
       </div>
       <div style={styles.btnsContainer}>
-        <Button
-          className={"defaultBoxShadowBlack"}
-          style={styles.btn}
-          onClick={() => backOnPress?.()}
-        >
-          Back
-        </Button>
+        <div style={styles.btnsLeft}>
+          <Button
+            className={"defaultBoxShadowBlack"}
+            style={styles.btn}
+            onClick={() => setInInteractiveView((prev) => !prev)}
+          >
+            {inInteractiveView ? "Static View" : "Interactive View"}
+          </Button>
+        </div>
         <div style={{ marginRight: 10 }} />
         <div style={styles.btnsRight}>
           <Button
@@ -165,7 +221,7 @@ const BoardView = (props) => {
           <Button
             className={"defaultBoxShadowBlack"}
             style={styles.btn}
-            disabled={saved || savedSuccessfully}
+            disabled={(saved || savedSuccessfully) && !changesMade}
             onClick={async () => {
               if (!loggedUser.isSignedIn) {
                 setIsSuccess(false);
@@ -174,10 +230,40 @@ const BoardView = (props) => {
               }
               setIsLoading(true);
               try {
-                await saveBoardToCloud(loggedUser?.user?.email, boardData);
+                const generatedBoards = boardData?.generatedBoards?.map(
+                  (res, index) => {
+                    if (index === selectedResult) {
+                      return shapesCopy;
+                    }
+                    return res;
+                  }
+                );
+                const connectors = boardData?.drawnConnectors?.map(
+                  (res, index) => {
+                    if (index === selectedResult) {
+                      return connectorsCopy;
+                    }
+                    return res;
+                  }
+                );
+                if (saved && boardData.boardId) {
+                  updateBoardValues(
+                    boardData.boardId,
+                    generatedBoards,
+                    connectors
+                  );
+                } else {
+                  await saveNewBoardToCloud(
+                    loggedUser?.user?.email,
+                    boardData,
+                    generatedBoards,
+                    connectors
+                  );
+                }
                 setIsSuccess(true);
                 setErrorMsg("Saved successfully!");
                 setSavedSuccessfully(true);
+                setChangesMade(false);
               } catch (error) {
                 setIsSuccess(false);
                 setErrorMsg("Failed to save board!");

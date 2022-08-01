@@ -236,38 +236,14 @@ const NewBoardView = () => {
             light
             style={styles.titleInput}
           />
-          <div style={styles.sepH} />
-          <div style={styles.numberInputContainer}>
-            <NumberInput
-              style={styles.numberInput}
-              hideSteppers
-              data-modal-primary-focus
-              min={1}
-              max={MAX_SHAPES}
-              invalid={showError && !formData?.shapesCount}
-              invalidText={
-                formData?.shapesCount > MAX_SHAPES || formData?.shapesCount < 1
-                  ? `Please enter a value between 1 and ${MAX_SHAPES}`
-                  : "This field is required!"
-              }
-              label={"Number of dies"}
-              placeholder={"Number of dies"}
-              value={formData?.shapesCount ?? 1}
-              onChange={(evt) => {
-                if (!evt.target?.value) {
-                  return;
-                }
-                setFormData({
-                  ...formData,
-                  shapesCount: evt.target?.value,
-                });
-              }}
-              light
-            />
-          </div>
         </div>
         <div style={styles.sepH} />
-        <div style={styles.fieldsRow}>
+        <div
+          style={{
+            ...styles.fieldsRow,
+            justifyContent: "space-between",
+          }}
+        >
           <div style={styles.numberInputContainer}>
             <NumberInput
               style={styles.numberInput}
@@ -345,6 +321,35 @@ const NewBoardView = () => {
                 light
               />
             </div>
+          </div>
+          <div style={styles.sepH} />
+          <div style={styles.numberInputContainer}>
+            <NumberInput
+              style={styles.numberInput}
+              hideSteppers
+              data-modal-primary-focus
+              min={1}
+              max={MAX_SHAPES}
+              invalid={showError && !formData?.shapesCount}
+              invalidText={
+                formData?.shapesCount > MAX_SHAPES || formData?.shapesCount < 1
+                  ? `Please enter a value between 1 and ${MAX_SHAPES}`
+                  : "This field is required!"
+              }
+              label={"Number of dies"}
+              placeholder={"Number of dies"}
+              value={formData?.shapesCount ?? 1}
+              onChange={(evt) => {
+                if (!evt.target?.value) {
+                  return;
+                }
+                setFormData({
+                  ...formData,
+                  shapesCount: evt.target?.value,
+                });
+              }}
+              light
+            />
           </div>
         </div>
         <h5 style={styles.sectionTitle}>Dies Information</h5>

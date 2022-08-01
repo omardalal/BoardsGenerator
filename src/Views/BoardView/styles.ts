@@ -32,6 +32,9 @@ export const styles = {
   btnsRight: {
     display: "flex",
   } as CSSProperties,
+  btnsLeft: {
+    display: "flex",
+  } as CSSProperties,
   spreadSheetViewContainer: {
     display: "flex",
     flexDirection: "column",

@@ -52,6 +52,9 @@ const SavedBoardsView = () => {
               generatedBoards: board?.generatedBoards?.map((board) => [
                 ...board.board,
               ]),
+              drawnConnectors: board?.drawnConnectors?.map((connector) => [
+                ...connector.connector,
+              ]),
             });
             setInBoardView(true);
           } catch (error) {
